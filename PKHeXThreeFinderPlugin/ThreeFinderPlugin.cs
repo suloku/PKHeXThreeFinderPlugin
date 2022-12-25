@@ -67,10 +67,11 @@ namespace PKHeXThreeFinderPlugin
                 for (i=0; i<sav.PartyCount; i++)
                 {
                     //Dunsparce check
-                    if (sav.GetPartySlotAtIndex(i).Species == (int)Species.Dunsparce)
+                    PKM current_party_mon = sav.GetPartySlotAtIndex(i);
+                    if (current_party_mon.Species == (int)Species.Dunsparce)
                     {
                         dunsparce_count++;
-                        if (sav.GetPartySlotAtIndex(i).EncryptionConstant % 100 == 0)
+                        if (current_party_mon.EncryptionConstant % 100 == 0)
                         {
                             dunsparce_3_count++;
                             output_message += "Three segmented Dunsparce found in party slot " + i.ToString() + "\n";
@@ -78,10 +79,10 @@ namespace PKHeXThreeFinderPlugin
                         
                     }
                     //Tandemaus check
-                    if (sav.GetPartySlotAtIndex(i).Species == (int)Species.Tandemaus)
+                    else if (current_party_mon.Species == (int)Species.Tandemaus)
                     {
                         tandemaus_count++;
-                        if (sav.GetPartySlotAtIndex(i).EncryptionConstant % 100 == 0)
+                        if (current_party_mon.EncryptionConstant % 100 == 0)
                         {
                             tandemaus_3_count++;
                             output_message += "Family of Three Tandemaus found in party slot " + i.ToString() + "\n";
@@ -91,36 +92,41 @@ namespace PKHeXThreeFinderPlugin
                 //Run trough all pokémon in the box storage
                 for (i=0; i<sav.BoxCount*30; i++)
                 {
-                    if (sav.GetBoxSlotAtIndex(i).Species == (int)Species.Dunsparce)
+                    PKM current_box_mon = sav.GetBoxSlotAtIndex(i);
+                    if (current_box_mon.Species == (int)Species.Dunsparce)
                     {
                         dunsparce_count++;
-                        if (sav.GetBoxSlotAtIndex(i).EncryptionConstant % 100 == 0)
+                        if (current_box_mon.EncryptionConstant % 100 == 0)
                         {
                             dunsparce_3_count++;
                             output_message += "Three segmented Dunsparce found in box #" + (i / 30).ToString() + " (" + sav.GetBoxName(i / 30) + ") slot " + (i % 30).ToString() + "\n";
                         }
                     }
-                    else if (sav.GetBoxSlotAtIndex(i).Species == (int)Species.Tandemaus)
+                    else if (current_box_mon.Species == (int)Species.Tandemaus)
                     {
                         tandemaus_count++;
-                        if (sav.GetBoxSlotAtIndex(i).EncryptionConstant % 100 == 0)
+                        if (current_box_mon.EncryptionConstant % 100 == 0)
                         {
                             tandemaus_3_count++;
                             output_message += "Family of Three Tandemaus found in box #" + (i / 30).ToString() + " (" + sav.GetBoxName(i / 30) + ") slot " + (i % 30).ToString() + "\n";
                         }
                     }
                 }
-                output_message += "\n\n";
+                if (output_message.Length > 0)
+                {
+                    output_message += "\n\n";
+                }
                 output_message += "Total Dunsparce found: " + dunsparce_count.ToString() + "\n";
                 output_message += "Total Three segmented Dunsparce found: " + dunsparce_3_count.ToString() + "\n";
                 output_message += "\n";
                 output_message += "Total Tandemaus found: " + tandemaus_count.ToString() + "\n";
                 output_message += "Total Family of Three Tandemaus found: " + tandemaus_3_count.ToString() + "\n";
 
-                Clipboard.SetText(output_message);
-
-                output_message += "\n\n                Results have been copied to clipboard                ";
-                MessageBox.Show(output_message);
+                var display_message = output_message + "\n\n                Copy results to clipboard?                ";
+                DialogResult dialog_result = MessageBox.Show(display_message, Name, MessageBoxButtons.OKCancel);
+                if (dialog_result == DialogResult.OK) {
+                    Clipboard.SetText(output_message);
+                }
 
                 //SaveFileEditor.ReloadSlots();
             }
