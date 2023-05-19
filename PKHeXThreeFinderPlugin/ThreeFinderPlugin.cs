@@ -1,7 +1,6 @@
 ﻿using System;
 using PKHeX.Core;
 using System.Windows.Forms;
-using System.Collections.Generic;
 
 namespace PKHeXThreeFinderPlugin
 {
@@ -19,9 +18,9 @@ namespace PKHeXThreeFinderPlugin
         public void Initialize(params object[] args)
         {
             Console.WriteLine($"Loading {Name}...");
-            SaveFileEditor = (ISaveFileProvider)Array.Find(args, z => z is ISaveFileProvider);
-            PKMEditor = (IPKMView)Array.Find(args, z => z is IPKMView);
-            var menu = (ToolStrip)Array.Find(args, z => z is ToolStrip);
+            SaveFileEditor = (ISaveFileProvider)Array.Find(args, z => z is ISaveFileProvider)!;
+            PKMEditor = (IPKMView)Array.Find(args, z => z is IPKMView)!;
+            var menu = (ToolStrip)Array.Find(args, z => z is ToolStrip)!;
             LoadMenuStrip(menu);
 
         }
@@ -43,7 +42,7 @@ namespace PKHeXThreeFinderPlugin
             ctrl.Visible = SaveFileEditor.SAV is SAV9SV;
             ctrl.Click += FindThreesomeClick;
         }
-        private void FindThreesomeClick(object sender, EventArgs e)
+        private void FindThreesomeClick(object? sender, EventArgs e)
         {
             FindThreesome();
         }
